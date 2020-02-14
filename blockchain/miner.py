@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from timeit import default_timer as timer
 
+import json
 import random
 
 
@@ -23,8 +24,12 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("Searching for next proof")
-    proof = 0
-    #  TODO: Your code here
+    proof = random.randint(1,76897379234923802482479)
+    proof_str = json.dumps(last_proof, sort_keys=True).encode()
+    last_hash = hashlib.sha256(proof_str).hexdigest()
+
+    while valid_proof(last_hash, proof) is False:
+      proof += random.randint(1, 76897379234923802482479)
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -38,9 +43,12 @@ def valid_proof(last_hash, proof):
 
     IE:  last_hash: ...AE9123456, new hash 123456E88...
     """
-
-    # TODO: Your code here!
-    pass
+    guess = f"{proof}".encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+    # last six digits = first six digits
+    return guess_hash[:6] == last_hash[-6:]
+    
+    
 
 
 if __name__ == '__main__':
@@ -64,8 +72,11 @@ if __name__ == '__main__':
     # Run forever until interrupted
     while True:
         # Get the last proof from the server
+      try:    
         r = requests.get(url=node + "/last_proof")
+    
         data = r.json()
+    
         new_proof = proof_of_work(data.get('proof'))
 
         post_data = {"proof": new_proof,
@@ -73,8 +84,15 @@ if __name__ == '__main__':
 
         r = requests.post(url=node + "/mine", json=post_data)
         data = r.json()
+        
         if data.get('message') == 'New Block Forged':
             coins_mined += 1
             print("Total coins mined: " + str(coins_mined))
         else:
             print(data.get('message'))
+      except ValueError:
+        print("Error:  Non-json response")
+        print("Response returned:")
+        print(r)
+        
+

@@ -29,8 +29,9 @@ def reconstruct_trip(tickets, length):
     route[current_index] = current_ticket
     current_index += 1
     next_destination = hash_table_retrieve(hashtable, current_ticket)
+    # concludes loop when we've reached the last destination
     if next_destination is not "NONE":      
       stack.append(next_destination)
 
-  # follow trail
+  # excludes last value
   return route[:-1]
