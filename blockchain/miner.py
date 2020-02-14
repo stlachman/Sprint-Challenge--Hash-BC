@@ -17,7 +17,7 @@ def proof_of_work(last_proof):
     - Find a number p' such that the last six digits of hash(p) are equal
     to the first six digits of hash(p')
     - IE:  last_hash: ...AE9123456, new hash 123456888...
-    - p is the previous proof, and p' is the new proof
+    - p is the previous proof, and p' is the new proofcd 
     - Use the same method to generate SHA-256 hashes as the examples in class
     """
 
