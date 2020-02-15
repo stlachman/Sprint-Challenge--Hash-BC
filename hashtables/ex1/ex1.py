@@ -9,9 +9,25 @@ from hashtables import (HashTable,
 def get_indices_of_item_weights(weights, length, limit):
     ht = HashTable(16)
 
-    """
-    YOUR CODE HERE
-    """
+    # key = weight and value = index
+    for index in range(length):
+      item = weights[index]
+      hash_table_insert(ht, key = item, value = index)
+
+    for index in range(length):
+      item = weights[index]
+      if item < limit:
+        # find complemnt of item
+        item_complement = limit - item
+        # check if index of complement exists
+        item_pair_index = hash_table_retrieve(ht, item_complement)
+
+        if item_pair_index is None:
+          continue
+        elif item_pair_index >= index:
+          return (item_pair_index, index)
+        else: 
+          return (index, item_pair_index)
 
     return None
 

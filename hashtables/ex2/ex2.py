@@ -13,11 +13,25 @@ class Ticket:
 
 
 def reconstruct_trip(tickets, length):
-    hashtable = HashTable(length)
-    route = [None] * length
+  hashtable = HashTable(length)
+  route = [None] * length
 
-    """
-    YOUR CODE HERE
-    """
+  for ticket in tickets:
+    hash_table_insert(hashtable, key = ticket.source, value = ticket.destination)
+  
+  # The first ticket, Value of ticket == "NONE"
+  stack = [hash_table_retrieve(hashtable, "NONE")]
+  # used to update index in array
+  current_index = 0
 
-    pass
+  while len(stack) > 0:
+    current_ticket = stack.pop()
+    route[current_index] = current_ticket
+    current_index += 1
+    next_destination = hash_table_retrieve(hashtable, current_ticket)
+    # concludes loop when we've reached the last destination
+    if next_destination is not "NONE":      
+      stack.append(next_destination)
+
+  # excludes last value
+  return route[:-1]
